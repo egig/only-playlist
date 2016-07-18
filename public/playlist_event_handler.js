@@ -71,6 +71,7 @@ window.PLAYLIST_EVENT_HANDLER = (function($, socket) {
     listenDeleteTrack: function() {
       $(document).on("click", '.delete-track', function(e){
         var pltrackid = $(this).data("pltrack-id");
+        $("li#track-"+pltrackid).slideUp();
         socket.emit("delete-track", pltrackid);
       });
     },
@@ -91,7 +92,7 @@ window.PLAYLIST_EVENT_HANDLER = (function($, socket) {
       });
 
       socket.on('delete-track', function(plname) {
-          window.location.reload(true);
+        
       });
 
       socket.on('playlist-changed', function(plid) {
@@ -109,18 +110,19 @@ window.PLAYLIST_EVENT_HANDLER = (function($, socket) {
         li.addClass('playing');
       });
 
-      socket.on('ytplaylist.updated', function(video, plid) {
-          var html = '<li class="media">\
-            <div class="media-left">\
-              <a href="#">\
-                <img height="40px"  class="media-object" src="'+video.snippet.thumbnails.medium.url+'">\
-              </a>\
-            </div>\
-            <div class="media-body">\
-              <h4 class="media-heading"><a class="track" data-id="'+video.id+'" href="javascript:;">'+video.snippet.title+'</a></h4>\
-            </div>\
-          </li>';
-          $(playlist).prepend(html);
+      socket.on('ytplaylist.updated.success', function(title, thumbnail_url, trackid) {
+          var html = '<li class="media" id="track-'+trackid+'">' +
+      '<div class="media-left">'+
+        '<a href="#">'+
+          '<img height="40px"  class="media-object" src="'+thumbnail_url+'">'+
+        '</a>'+
+      '</div>'+
+      '<div class="media-body">'+
+        '<h4 class="media-heading"><a class="track" data-id="'+title+'" href="javascript:;">'+title+'</a></h4>'+
+         '<button class="btn btn-xs btn-default delete-track" data-pltrack-id="'+trackid+'" >Delete</button>'+
+      '</div>'+
+    '</li>';
+          $(playlist).append(html);
       });
 
       socket.on('playlist-sorted', function(ids) {

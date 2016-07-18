@@ -103,9 +103,9 @@ io.on('connection', function(socket){
   });
 
   socket.on('ytplaylist.updated', function(vid, plid){
-     io.emit('ytplaylist.updated', vid, plid);
+     model.insert_track(plid, vid.snippet.title, vid.snippet.thumbnails.medium.url, vid.id, io);
 
-     model.insert_track(plid, vid.snippet.title, vid.snippet.thumbnails.medium.url, vid.id);
+     //io.emit('ytplaylist.updated.success', vid, plid);
   });
 
   socket.on('track.played', function(link, host){

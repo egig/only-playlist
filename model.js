@@ -129,7 +129,7 @@ module.exports = {
     //this.connection.end();
   },
 
-  insert_track: function(playlist_id, title, thumbnail_url, video_id) {
+  insert_track: function(playlist_id, title, thumbnail_url, video_id, io) {
 
     this.create_connection();
     this.connection.connect()
@@ -153,13 +153,10 @@ module.exports = {
               playlist_id: playlist_id,
               track_id: track_id,
             }
-            _this.connection.query('INSERT INTO playlist_track SET ?', data2, function(err, result){
-
+            _this.connection.query('INSERT INTO playlist_track SET ?', data2, function(err, resultPL){
+              io.emit('ytplaylist.updated.success', title, thumbnail_url, resultPL.insertId);
             });
 
-            if(err) {
-              return console.log(err);
-            }
         });
       } else {
 
@@ -170,10 +167,8 @@ module.exports = {
           track_id: track_id,
         }
 
-        _this.connection.query(" INSERT INTO playlist_track SET ?", data2, function(err, result){
-          if(err) {
-            return console.log(err);
-          }
+        _this.connection.query(" INSERT INTO playlist_track SET ?", data2, function(err, resultPL){
+          io.emit('ytplaylist.updated.success', title, thumbnail_url, resultPL.insertId);
          });
       }
     });
