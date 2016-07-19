@@ -126,7 +126,7 @@ io.on('connection', function(socket){
   socket.on('delete-track', function(pltrackid){
 
     model.delete_pltrack(pltrackid, function(){
-      io.emit('delete-track', pltrackid);
+      io.emit('delete-track-success', pltrackid);
     });
   });
 

@@ -71,8 +71,8 @@ window.PLAYLIST_EVENT_HANDLER = (function($, socket) {
     listenDeleteTrack: function() {
       $(document).on("click", '.delete-track', function(e){
         var pltrackid = $(this).data("pltrack-id");
-        $("li#track-"+pltrackid).slideUp();
-        socket.emit("delete-track", pltrackid);
+        var deleteTrack = "li#track-"+pltrackid;
+        socket.emit("delete-track", deleteTrack);
       });
     },
 
@@ -101,6 +101,10 @@ window.PLAYLIST_EVENT_HANDLER = (function($, socket) {
 
       socket.on('playlist-deleted', function(plid) {
           window.location.replace(1);
+      });
+
+      socket.on('delete-track-success', function(trackid) {
+          $(trackid).slideUp();
       });
 
       socket.on('yttrack.played', function(video_id, index){
